@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Filipe Silva — Cloud Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:       #FF0033;
+      --red-dim:   #CC0028;
+      --red-glow:  rgba(255, 0, 51, 0.35);
+      --red-faint: rgba(255, 0, 51, 0.08);
+      --black:     #000000;
+      --dark:      #0A0A0A;
+      --panel:     #0F0F0F;
+      --border:    #1A1A1A;
+      --white:     #FFFFFF;
+      --grey:      #888888;
+      --mono:      'Share Tech Mono', monospace;
+      --display:   'Rajdhani', sans-serif;
+      --body:      'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--body);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── CURSOR CUSTOMIZADO ── */
+    .cursor {
+      position: fixed;
+      width: 12px; height: 12px;
+      background: var(--red);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+      box-shadow: 0 0 10px var(--red), 0 0 20px var(--red-glow);
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--red);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+      opacity: 0.5;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* ── SCANLINES ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 8999;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+    }
+    .nav-logo span { color: var(--white); }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--grey);
+      text-decoration: none;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1px;
+      background: var(--red);
+      transform: scaleX(0);
+      transition: transform 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* grade de fundo */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+      opacity: 0.4;
+    }
+
+    /* linha de luz vermelha diagonal */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: -20%; right: -10%;
+      width: 2px;
+      height: 140%;
+      background: linear-gradient(to bottom, transparent, var(--red), transparent);
+      transform: rotate(-15deg);
+      opacity: 0.3;
+      animation: scanline 4s ease-in-out infinite;
+    }
+    @keyframes scanline {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 900px; }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--red);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--red);
+    }
+
+    .hero-name {
+      font-family: var(--display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .hero-name .accent {
+      color: var(--red);
+      text-shadow: 0 0 30px var(--red-glow), 0 0 60px var(--red-glow);
+      animation: flicker 6s ease-in-out infinite;
+    }
+    @keyframes flicker {
+      0%, 95%, 100% { opacity: 1; }
+      96% { opacity: 0.8; }
+      97% { opacity: 1; }
+      98% { opacity: 0.6; }
+      99% { opacity: 1; }
+    }
+
+    .hero-title {
+      font-family: var(--mono);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--grey);
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+    }
+    .hero-title .typing {
+      color: var(--white);
+      border-right: 2px solid var(--red);
+      animation: blink 0.8s step-end infinite;
+    }
+    @keyframes blink { 50% { border-color: transparent; } }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--grey);
+      line-height: 1.7;
+      max-width: 560px;
+      margin-bottom: 3rem;
+      font-weight: 300;
+    }
+    .hero-desc strong { color: var(--white); font-weight: 500; }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.85rem 2rem;
+      border: 1px solid;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--red);
+      transform: translateX(-100%);
+      transition: transform 0.2s ease;
+      z-index: -1;
+    }
+    .btn:hover::before { transform: translateX(0); }
+    .btn-primary {
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .btn-primary:hover { color: var(--white); }
+    .btn-ghost {
+      color: var(--grey);
+      border-color: var(--border);
+    }
+    .btn-ghost:hover { color: var(--white); border-color: var(--red); }
+
+    /* stats flutuantes no hero */
+    .hero-stats {
+      position: absolute;
+      right: 4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      z-index: 1;
+    }
+    .stat-item {
+      text-align: right;
+      border-right: 2px solid var(--red);
+      padding-right: 1.5rem;
+    }
+    .stat-number {
+      font-family: var(--display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--grey);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* ── SEÇÕES ── */
+    section {
+      padding: 6rem 4rem;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--red);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--red), transparent);
+    }
+
+    /* ── SOBRE ── */
+    #sobre { background: var(--dark); }
+
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .sobre-text p {
+      color: var(--grey);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+    .sobre-text p strong { color: var(--white); font-weight: 500; }
+
+    .sobre-highlight {
+      border-left: 2px solid var(--red);
+      padding: 1rem 1.5rem;
+      background: var(--red-faint);
+      margin: 2rem 0;
+    }
+    .sobre-highlight p {
+      color: var(--white) !important;
+      font-style: italic;
+      margin: 0 !important;
+    }
+
+    .terminal-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .terminal-header {
+      background: var(--border);
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: var(--red); }
+    .dot-yellow { background: #FFB800; }
+    .dot-green { background: #00FF88; }
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 2;
+    }
+    .t-prompt { color: var(--red); }
+    .t-cmd { color: var(--white); }
+    .t-out { color: var(--grey); }
+    .t-val { color: #00FF88; }
+    .t-str { color: #FFB800; }
+
+    /* ── HABILIDADES ── */
+    #habilidades { background: var(--black); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .skill-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      cursor: default;
+    }
+    .skill-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--red);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+      transform-origin: left;
+    }
+    .skill-card:hover {
+      border-color: rgba(255,0,51,0.3);
+      transform: translateY(-4px);
+    }
+    .skill-card:hover::before { transform: scaleX(1); }
+
+    .skill-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .skill-name {
+      font-family: var(--display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .skill-desc {
+      font-size: 0.85rem;
+      color: var(--grey);
+      line-height: 1.6;
+    }
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1.2rem;
+    }
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--red);
+      border: 1px solid rgba(255,0,51,0.3);
+      padding: 0.2rem 0.6rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── JORNADA ── */
+    #jornada { background: var(--dark); }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--red), var(--border));
+    }
+    .timeline-item {
+      position: relative;
+      padding: 0 0 3rem 2.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px; top: 6px;
+      width: 9px; height: 9px;
+      background: var(--red);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--red-glow);
+    }
+    .timeline-date {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--red);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.5rem;
+    }
+    .timeline-title {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .timeline-sub {
+      font-size: 0.85rem;
+      color: var(--grey);
+      margin-bottom: 0.8rem;
+    }
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--grey);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── PROJETOS ── */
+    #projetos { background: var(--black); }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .project-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+    .project-card:hover {
+      border-color: rgba(255,0,51,0.4);
+      transform: translateY(-4px);
+    }
+    .project-top {
+      background: var(--red-faint);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .project-type {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .project-status {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: #00FF88;
+      letter-spacing: 0.1em;
+    }
+    .project-status::before {
+      content: '● ';
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .project-body { padding: 1.5rem; }
+    .project-title {
+      font-family: var(--display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .project-desc {
+      font-size: 0.85rem;
+      color: var(--grey);
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── CONTATO ── */
+    #contato {
+      background: var(--dark);
+      text-align: center;
+    }
+    .contato-inner { max-width: 600px; margin: 0 auto; }
+    .contato-title {
+      font-family: var(--display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .contato-title span { color: var(--red); }
+    .contato-sub {
+      color: var(--grey);
+      margin-bottom: 3rem;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .contato-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--grey);
+      letter-spacing: 0.1em;
+    }
+    footer span { color: var(--red); }
+
+    /* ── GLITCH HOVER ── */
+    .glitch {
+      position: relative;
+    }
+    .glitch:hover::before,
+    .glitch:hover::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+    }
+    .glitch:hover::before {
+      color: var(--red);
+      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+      transform: translateX(-2px);
+      animation: glitch1 0.3s steps(2) infinite;
+    }
+    .glitch:hover::after {
+      color: #00FFFF;
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+      transform: translateX(2px);
+      animation: glitch2 0.3s steps(2) infinite;
+    }
+    @keyframes glitch1 {
+      0% { transform: translateX(-2px); }
+      100% { transform: translateX(2px); }
+    }
+    @keyframes glitch2 {
+      0% { transform: translateX(2px); }
+      100% { transform: translateX(-2px); }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      section { padding: 4rem 1.5rem; }
+      #hero { padding: 7rem 1.5rem 4rem; }
+      .hero-stats { display: none; }
+      .sobre-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor customizado -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">FS<span>://</span>cloud</div>
+    <div class="nav-links">
+      <a href="#sobre">sobre</a>
+      <a href="#habilidades">skills</a>
+      <a href="#jornada">jornada</a>
+      <a href="#projetos">projetos</a>
+      <a href="#contato">contato</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-content">
+      <div class="hero-eyebrow">iniciando sistema // cloud engineer</div>
+      <h1 class="hero-name glitch" data-text="Filipe">
+        Filipe<br/><span class="accent">Silva</span>
+      </h1>
+      <p class="hero-title">
+        <span class="typing" id="typing"></span>
+      </p>
+      <p class="hero-desc">
+        De <strong>segurança veicular</strong> para a nuvem. Em transição de carreira com foco em
+        <strong>Cloud Computing</strong>, <strong>DevOps</strong> e <strong>Infrastructure as Code</strong>.
+        Construindo o futuro, uma linha de código por vez.
+      </p>
+      <div class="hero-cta">
+        <a href="#projetos" class="btn btn-primary">Ver Projetos</a>
+        <a href="#contato" class="btn btn-ghost">Entrar em Contato</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-number">AWS</div>
+        <div class="stat-label">Re/Start Program</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">6+</div>
+        <div class="stat-label">Tecnologias</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">∞</div>
+        <div class="stat-label">Vontade de Aprender</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sobre -->
+  <section id="sobre">
+    <div class="section-header reveal">
+      <span class="section-tag">01 // sobre</span>
+      <h2 class="section-title">Quem sou eu</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="sobre-grid">
+      <div class="sobre-text reveal">
+        <p>
+          Meu nome é <strong>Filipe dos Santos Silva</strong>. Passei anos na área de
+          <strong>segurança de carros</strong> — um campo que me ensinou responsabilidade,
+          atenção a detalhes e raciocínio crítico sob pressão. Hoje, estou aplicando tudo
+          isso num novo desafio: o mundo da <strong>computação em nuvem</strong>.
+        </p>
+        <div class="sobre-highlight">
+          <p>"Uma pessoa em transição de carreira com muita vontade de se tornar um profissional em nuvem."</p>
+        </div>
+        <p>
+          Atualmente participante do programa <strong>AWS re/Start</strong> pela Campinho Digital,
+          estudo Docker, Kubernetes, Terraform e os principais serviços AWS — sempre com foco no
+          <strong>porquê arquitetural</strong> de cada decisão, não só no como executar.
+        </p>
+        <p>
+          Meu objetivo é atuar como <strong>Analista de Cloud</strong> ou
+          <strong>Solutions Architect Jr</strong>, ajudando empresas a construir infraestrutura
+          escalável, segura e com custo otimizado.
+        </p>
+      </div>
+      <div class="terminal-box reveal">
+        <div class="terminal-header">
+          <div class="dot dot-red"></div>
+          <div class="dot dot-yellow"></div>
+          <div class="dot dot-green"></div>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-prompt">$ </span><span class="t-cmd">cat filipe.json</span></div>
+          <div class="t-out">{</div>
+          <div><span class="t-out">&nbsp;&nbsp;"nome": </span><span class="t-str">"Filipe dos Santos Silva"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"role": </span><span class="t-str">"Cloud Engineer Jr"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"base": </span><span class="t-str">"Brasil 🇧🇷"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"status": </span><span class="t-val">"available"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"programa": </span><span class="t-str">"AWS re/Start"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"foco": [</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="t-str">"Cloud Architecture"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="t-str">"Infrastructure as Code"</span><span class="t-out">,</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="t-str">"DevOps"</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;],</span></div>
+          <div><span class="t-out">&nbsp;&nbsp;"disponivel": </span><span class="t-val">true</span></div>
+          <div class="t-out">}</div>
+          <br/>
+          <div><span class="t-prompt">$ </span><span class="t-cmd">_</span><span style="animation:blink 0.8s step-end infinite;border-right:2px solid var(--red)">&nbsp;</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Habilidades -->
+  <section id="habilidades">
+    <div class="section-header reveal">
+      <span class="section-tag">02 // skills</span>
+      <h2 class="section-title">Stack Técnico</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">🐳</div>
+        <div class="skill-name">Docker</div>
+        <div class="skill-desc">Criação de imagens seguras e otimizadas. Multi-stage builds, non-root containers, healthchecks e gestão de secrets.</div>
+        <div class="skill-tags">
+          <span class="tag">Dockerfile</span>
+          <span class="tag">Multi-stage</span>
+          <span class="tag">Security</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">☸️</div>
+        <div class="skill-name">Kubernetes</div>
+        <div class="skill-desc">Orquestração de containers com Deployments, Services, ConfigMaps, Secrets, Probes e gestão de recursos.</div>
+        <div class="skill-tags">
+          <span class="tag">K8s</span>
+          <span class="tag">EKS</span>
+          <span class="tag">kubectl</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">☁️</div>
+        <div class="skill-name">AWS</div>
+        <div class="skill-desc">Experiência com os principais serviços: EC2, S3, IAM, VPC, RDS, CloudWatch e EKS.</div>
+        <div class="skill-tags">
+          <span class="tag">EC2</span>
+          <span class="tag">S3</span>
+          <span class="tag">IAM</span>
+          <span class="tag">VPC</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🏗️</div>
+        <div class="skill-name">Terraform</div>
+        <div class="skill-desc">Infrastructure as Code para provisionamento de infraestrutura AWS de forma reproduzível, versionada e automatizada.</div>
+        <div class="skill-tags">
+          <span class="tag">IaC</span>
+          <span class="tag">HCL</span>
+          <span class="tag">State</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🔧</div>
+        <div class="skill-name">Linux</div>
+        <div class="skill-desc">Linha de comando, permissões, processos, rede e scripting Bash para automação de tarefas de infraestrutura.</div>
+        <div class="skill-tags">
+          <span class="tag">Bash</span>
+          <span class="tag">CLI</span>
+          <span class="tag">Shell</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🔄</div>
+        <div class="skill-name">CI/CD</div>
+        <div class="skill-desc">Pipelines de integração e deploy contínuo com GitHub Actions para automação de builds e deploys na AWS.</div>
+        <div class="skill-tags">
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">Pipeline</span>
+          <span class="tag">Deploy</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Jornada -->
+  <section id="jornada">
+    <div class="section-header reveal">
+      <span class="section-tag">03 // jornada</span>
+      <h2 class="section-title">Minha Trajetória</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-date">ANTERIOR // SEGURANÇA VEICULAR</div>
+        <div class="timeline-title">Profissional de Segurança Automotiva</div>
+        <div class="timeline-sub">Área de Segurança de Carros</div>
+        <div class="timeline-desc">
+          Anos de experiência no setor automotivo, desenvolvendo habilidades essenciais de
+          responsabilidade, atenção a detalhes e raciocínio crítico — competências que hoje
+          aplico diretamente na arquitetura de sistemas seguros na nuvem.
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-date">2024 // DECISÃO DE MUDANÇA</div>
+        <div class="timeline-title">Início da Transição de Carreira</div>
+        <div class="timeline-sub">Autodidatismo + Cursos Online</div>
+        <div class="timeline-desc">
+          Tomei a decisão de migrar para tecnologia, com foco em Cloud Computing.
+          Comecei pelos fundamentos: Linux, redes, conceitos de nuvem e os primeiros
+          contatos com AWS.
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-date">2025 // AWS RE/START</div>
+        <div class="timeline-title">Campinho Digital — AWS re/Start</div>
+        <div class="timeline-sub">Programa de formação intensiva em Cloud</div>
+        <div class="timeline-desc">
+          Ingressei no programa AWS re/Start pela Campinho Digital, com foco em
+          Docker, Kubernetes, Terraform, AWS Core e arquitetura de soluções.
+          Estudando com profundidade o porquê de cada decisão técnica.
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-date">EM BREVE // PRÓXIMO PASSO</div>
+        <div class="timeline-title">AWS Cloud Practitioner</div>
+        <div class="timeline-sub">Certificação em andamento</div>
+        <div class="timeline-desc">
+          Preparando para a certificação AWS Cloud Practitioner, com objetivo de
+          avançar para Solutions Architect Associate e atuar como
+          Analista de Cloud Jr ou Solutions Architect Jr.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projetos -->
+  <section id="projetos">
+    <div class="section-header reveal">
+      <span class="section-tag">04 // projetos</span>
+      <h2 class="section-title">Projetos</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-top">
+          <span class="project-type">Docker // Security</span>
+          <span class="project-status">em produção</span>
+        </div>
+        <div class="project-body">
+          <div class="project-title">PayFast Container</div>
+          <div class="project-desc">
+            Aplicação Flask containerizada com Dockerfile de produção: multi-stage build,
+            non-root user, healthcheck, .dockerignore e pinning de versão por digest.
+          </div>
+          <div class="skill-tags">
+            <span class="tag">Docker</span>
+            <span class="tag">Python</span>
+            <span class="tag">Security</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-top">
+          <span class="project-type">Kubernetes // Orchestration</span>
+          <span class="project-status">em produção</span>
+        </div>
+        <div class="project-body">
+          <div class="project-title">K8s Multi-Service</div>
+          <div class="project-desc">
+            App multi-serviço orquestrada no Kubernetes com Deployment, Service,
+            ConfigMap, Secret, Liveness/Readiness Probes e Resource Limits.
+          </div>
+          <div class="skill-tags">
+            <span class="tag">Kubernetes</span>
+            <span class="tag">YAML</span>
+            <span class="tag">kind</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-top">
+          <span class="project-type">AWS // Portfolio</span>
+          <span class="project-status">este site</span>
+        </div>
+        <div class="project-body">
+          <div class="project-title">Portfolio na AWS</div>
+          <div class="project-desc">
+            Este portfólio hospedado na AWS com S3 + CloudFront + HTTPS e
+            pipeline de deploy automático via GitHub Actions.
+          </div>
+          <div class="skill-tags">
+            <span class="tag">S3</span>
+            <span class="tag">CloudFront</span>
+            <span class="tag">CI/CD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contato -->
+  <section id="contato">
+    <div class="contato-inner reveal">
+      <p class="section-tag" style="margin-bottom:1rem">05 // contato</p>
+      <h2 class="contato-title">Vamos <span>Conversar</span>?</h2>
+      <p class="contato-sub">
+        Estou em transição de carreira e aberto a oportunidades em Cloud Computing,
+        DevOps e Infraestrutura. Se você tem uma vaga ou quer trocar uma ideia sobre
+        tecnologia, me manda uma mensagem.
+      </p>
+      <div class="contato-links">
+        <a href="https://linkedin.com/in/filipeguita" target="_blank" class="btn btn-primary">LinkedIn</a>
+        <a href="https://github.com/filipeguita" target="_blank" class="btn btn-ghost">GitHub</a>
+        <a href="mailto:filipe@email.com" class="btn btn-ghost">E-mail</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 <span>Filipe dos Santos Silva</span></p>
+    <p>Feito com <span>❤</span> e hospedado na <span>AWS</span></p>
+  </footer>
+
+  <script>
+    // ── Cursor customizado ──
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+
+    // ring com delay suave
+    (function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    // cursor maior em links
+    document.querySelectorAll('a, button, .skill-card, .project-card').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width  = '20px';
+        cursor.style.height = '20px';
+        ring.style.width    = '54px';
+        ring.style.height   = '54px';
+        ring.style.opacity  = '0.8';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width  = '12px';
+        cursor.style.height = '12px';
+        ring.style.width    = '36px';
+        ring.style.height   = '36px';
+        ring.style.opacity  = '0.5';
+      });
+    });
+
+    // ── Typing effect ──
+    const phrases = [
+      'Cloud Engineer em formação',
+      'AWS re/Start // Campinho Digital',
+      'Docker · Kubernetes · Terraform',
+      'Arquiteto de Soluções (em construção)',
+    ];
+    let pi = 0, ci = 0, deleting = false;
+    const typingEl = document.getElementById('typing');
+
+    function type() {
+      const phrase = phrases[pi];
+      if (!deleting) {
+        typingEl.textContent = phrase.slice(0, ++ci);
+        if (ci === phrase.length) {
+          deleting = true;
+          setTimeout(type, 2000);
+          return;
+        }
+      } else {
+        typingEl.textContent = phrase.slice(0, --ci);
+        if (ci === 0) {
+          deleting = false;
+          pi = (pi + 1) % phrases.length;
+        }
+      }
+      setTimeout(type, deleting ? 40 : 80);
+    }
+    type();
+
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
+EOF
